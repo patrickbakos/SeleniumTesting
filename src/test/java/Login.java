@@ -1,15 +1,13 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Login {
@@ -22,10 +20,10 @@ public class Login {
         driver.get("https://jira.codecool.codecanvas.hu/");
     }
 
-//    @AfterEach
-//    private void closeDriver() {
-//        driver.close();
-//    }
+    @AfterEach
+    private void closeDriver() {
+        driver.close();
+    }
 
     @Test
     public void checkValidLogin() {
@@ -48,5 +46,43 @@ public class Login {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"usernameerror\"]/p")));
         WebElement errorMessage = driver.findElement(By.xpath("//*[@id=\"usernameerror\"]/p"));
         assertEquals("Sorry, your username and password are incorrect - please try again.", errorMessage.getText());
+    }
+
+    @Test
+    public void wrongUsername() {
+
+        Wait wait = new FluentWait(driver).ignoring(NoSuchElementException.class).withTimeout(5, TimeUnit.SECONDS);
+        driver.findElement(By.id("login-form-username")).sendKeys("user18");
+        driver.findElement((By.id("login-form-password"))).sendKeys("0123");
+        driver.findElement(By.id("login")).click();
+        boolean messageFound;
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[.='Sorry, your username and password are incorrect - please try again.']")));
+            messageFound = true;
+        }
+        catch (TimeoutException e) {
+            messageFound = false;
+        }
+        assertEquals(true, messageFound);
+        //TODO captcha????
+    }
+
+    @Test
+    public void wrongPassword() {
+
+        Wait wait = new FluentWait(driver).ignoring(NoSuchElementException.class).withTimeout(5, TimeUnit.SECONDS);
+        driver.findElement(By.id("login-form-username")).sendKeys("Lobab");
+        driver.findElement((By.id("login-form-password"))).sendKeys("0123");
+        driver.findElement(By.id("login")).click();
+        boolean messageFound;
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[.='Sorry, your username and password are incorrect - please try again.']")));
+            messageFound = true;
+        }
+        catch (TimeoutException e) {
+            messageFound = false;
+        }
+        assertEquals(true, messageFound);
+
     }
 }

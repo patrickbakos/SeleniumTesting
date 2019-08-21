@@ -21,10 +21,10 @@ public class Logout {
         driver.get("https://jira.codecool.codecanvas.hu/");
     }
 
-//    @AfterEach
-//    private void closeDriver() {
-//        driver.close();
-//    }
+    @AfterEach
+    private void closeDriver() {
+        driver.close();
+    }
 
     @Test
     public void checkValidLogout() {
