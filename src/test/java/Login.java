@@ -6,7 +6,7 @@ public class Login {
     @AfterEach
 
     @Test
-    public void checkLogin() {
+    public void checkValidLogin() {
 
     }
 }
