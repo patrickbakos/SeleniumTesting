@@ -39,4 +39,14 @@ public class Login {
         assertEquals("user18", userID.getAttribute("data-username"));
 
     }
+
+    @Test
+    public void checkMissingLoginCredentials() {
+
+        Wait wait = new FluentWait(driver).ignoring(NoSuchElementException.class).withTimeout(10, TimeUnit.SECONDS);
+        driver.findElement(By.id("login")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"usernameerror\"]/p")));
+        WebElement errorMessage = driver.findElement(By.xpath("//*[@id=\"usernameerror\"]/p"));
+        assertEquals("Sorry, your username and password are incorrect - please try again.", errorMessage.getText());
+    }
 }
