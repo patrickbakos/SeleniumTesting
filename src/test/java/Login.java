@@ -1,10 +1,7 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -22,10 +19,10 @@ public class Login {
         driver.get("https://jira.codecool.codecanvas.hu/");
     }
 
-//    @AfterEach
-//    private void closeDriver() {
-//        driver.close();
-//    }
+    @AfterEach
+    private void closeDriver() {
+        driver.close();
+    }
 
     @Test
     public void checkValidLogin() {
@@ -37,7 +34,6 @@ public class Login {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("header-details-user-fullname")));
         WebElement userID = driver.findElement(By.id("header-details-user-fullname"));
         assertEquals("user18", userID.getAttribute("data-username"));
-
     }
 
     @Test
@@ -48,5 +44,16 @@ public class Login {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"usernameerror\"]/p")));
         WebElement errorMessage = driver.findElement(By.xpath("//*[@id=\"usernameerror\"]/p"));
         assertEquals("Sorry, your username and password are incorrect - please try again.", errorMessage.getText());
+    }
+
+    @Test
+    public void checkLoginWithEnter() {
+
+        Wait wait = new FluentWait(driver).ignoring(NoSuchElementException.class).withTimeout(10, TimeUnit.SECONDS);
+        driver.findElement(By.id("login-form-username")).sendKeys("user18");
+        driver.findElement((By.id("login-form-password"))).sendKeys("CoolCanvas19." + Keys.RETURN);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("header-details-user-fullname")));
+        WebElement userID = driver.findElement(By.id("header-details-user-fullname"));
+        assertEquals("user18", userID.getAttribute("data-username"));
     }
 }
